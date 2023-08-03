@@ -1,0 +1,65 @@
+.gallery-wrapper {
+  margin-top: 4.73rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.85rem;
+}
+.frame {
+  position: relative;
+  transition: all 200ms ease-in-out;
+  overflow: hidden;
+  border-radius: 1rem;
+}
+.frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.frame .btn--danger-outline {
+  border-radius: 2.375rem;
+  background-color: transparent;
+  border: 1px solid var(--btn-danger);
+  color: var(--btn-danger);
+  padding: 0.36em 0.99em;
+  font-size: 0.625rem;
+  position: absolute;
+  opacity: 0;
+  visibility: hidden;
+  top: 1.12rem;
+  right: 1.12rem;
+  z-index: 2;
+}
+.frame .btn--danger-outline:hover {
+  background-color: var(--btn-danger);
+  color: var(--clr-neutral);
+}
+.frame:hover::after {
+  content: "";
+  position: absolute;
+  display: block;
+  inset: 0;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.38);
+}
+
+.frame .img-description {
+  font-family: var(--ff-secondary);
+  font-size: 1.125rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  color: var(--clr-neutral);
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+  bottom: 2.05rem;
+  left: 1.5rem;
+  z-index: 2;
+  max-width: 18.09544rem;
+}
+
+.frame:hover .btn--danger-outline,
+.frame:hover .img-description {
+  opacity: 1;
+  visibility: visible;
+}

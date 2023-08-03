@@ -1,0 +1,94 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans:wght@500;700&display=swap");
+
+:root {
+  --btn-sucess: #3db46d;
+  --btn-danger: #eb5757;
+  --text-primary: #4f4f4f;
+  --text-secondary: #bdbdbd;
+  --text-tertiary: #333333;
+  --clr-neutral: #fff;
+  --ff-primary: "Noto Sans", sans-serif;
+  --ff-secondary: "Montserrat", sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--ff-primary);
+}
+
+/* =========== */
+/* Common CSS */
+/* ==========*/
+img {
+  max-width: 100%;
+  height: auto;
+}
+.container {
+  max-width: 90rem;
+  margin-inline: auto;
+  padding: 0 1rem;
+  width: 100%;
+}
+a {
+  text-decoration: none;
+}
+.btn {
+  display: inline-block;
+  border-radius: 0.75rem;
+  box-shadow: 0px 1px 6px 0px rgba(0, 0, 0, 0.1);
+  color: var(--clr-neutral);
+  padding: 1em 1.24em;
+  cursor: pointer;
+  transition: 200ms ease-in-out;
+}
+.btn:hover {
+  transform: translateY(-2px);
+  -webkit-box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
+}
+.btn--success {
+  background: var(--btn-sucess);
+}
+.btn--danger {
+  background: var(--btn-danger);
+}
+.btn--cancel {
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+.form-group {
+  margin-bottom: 1.16rem;
+}
+.form-group:last-of-type {
+  margin-bottom: 0;
+}
+.form-label {
+  display: inline-block;
+  color: var(--text-primary);
+  font-family: var(--ff-primary);
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-bottom: 0.62rem;
+}
+.form-control {
+  background: var(--clr-neutral);
+  border-radius: 0.75rem;
+  border: 1px solid var(--text-secondary);
+  box-shadow: 0px 1px 6px 0px rgba(0, 0, 0, 0.1);
+  padding: 1.12em 1.01em;
+  font-family: inherit;
+  width: 100%;
+}
+
+.form-control:focus {
+  outline: none;
+}

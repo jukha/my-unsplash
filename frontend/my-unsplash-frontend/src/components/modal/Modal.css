@@ -1,0 +1,41 @@
+.add-photo-modal,
+.delete-photo-modal {
+  position: fixed;
+  z-index: 1072;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 1.5em 2em;
+}
+
+.modal-backshadow {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1072;
+  background: rgba(0, 0, 0, 0.25);
+}
+.add-photo-modal {
+  max-width: 38.75rem;
+  width: 100%;
+  border-radius: 0.75rem;
+}
+.modal-header {
+  color: var(--text-tertiary);
+  font-family: var(--ff-primary);
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-bottom: 1.31rem;
+}
+.form-btns {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  gap: 1.55rem;
+  margin-top: 1.5rem;
+}
