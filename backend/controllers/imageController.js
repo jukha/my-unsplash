@@ -5,7 +5,9 @@ exports.getAllImages = async (req, res, next) => {
     const { label } = req.params;
     let query = {};
     if (label) query = { $text: { $search: label } };
-    const images = await Image.find(query).select("-__v");
+    const images = await Image.find(query)
+      .sort({ createdAt: -1 })
+      .select("-__v");
     res.status(200).json({
       status: "success",
       data: images,

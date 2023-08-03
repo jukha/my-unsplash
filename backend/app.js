@@ -1,9 +1,11 @@
 const express = require("express");
 const app = express();
 const PORT = 5000;
-const imageController = require("./controllers/imageController");
 const dotenv = require("dotenv");
+const cors = require("cors");
 const mongoose = require("mongoose");
+const imageRouter = require("./routes/imageRoutes");
+const userRouter = require("./routes/userRoutes");
 
 dotenv.config({
   path: "./.env",
@@ -15,11 +17,10 @@ mongoose.connect(DB).then(() => {
   console.log("DB connection successfull");
 });
 
+app.use(cors());
 app.use(express.json());
-
-app.get("/images", imageController.getAllImages);
-app.delete("/images/:id", imageController.deleteImage);
-app.post("/images", imageController.postImage);
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/images", imageRouter);
 app.all("*", (req, res, next) => {
   res.status(400).json({
     status: "fail",
