@@ -42,6 +42,7 @@ header .form-group {
   max-width: 18.75rem;
   display: flex;
   align-items: center;
+  margin-bottom: 0;
 }
 header .btn--success {
   margin-left: auto;
