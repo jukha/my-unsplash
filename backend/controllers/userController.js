@@ -13,6 +13,7 @@ const createSendToken = (user, statusCode, res) => {
   user.password = undefined;
   res.status(statusCode).json({
     status: "succcess",
+    message: "Registered Successfully",
     token,
     data: { user },
   });
@@ -27,6 +28,9 @@ exports.signup = async (req, res, next) => {
     });
     createSendToken(newUser, 201, res);
   } catch (error) {
+    if (error.code === 11000) {
+      error.message = "Email Already Registered.";
+    }
     res.status(400).json({
       status: "fail",
       message: error.message,
