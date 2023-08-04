@@ -1,11 +1,18 @@
 import "./Header.css";
 import userIcon from "./../../assets/user-solid.svg";
 import searchIcon from "./../../assets/search-icon.svg";
+import logoutIcon from "./../../assets/logout.svg";
 import Modal from "../modal/Modal";
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 export default function Header({ user }) {
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(
+    user !== undefined ? true : false
+  );
+
   useEffect(() => {
     document.addEventListener("keydown", handleEscKey);
 
@@ -17,6 +24,15 @@ export default function Header({ user }) {
     if (event.key === "Escape") {
       setShowAddModal(false);
     }
+  };
+
+  const navigate = useNavigate(null);
+
+  const logout = () => {
+    localStorage.removeItem("user");
+    setIsUserLoggedIn(false);
+    setShowUserMenu(false);
+    navigate("/");
   };
 
   return (
@@ -40,22 +56,30 @@ export default function Header({ user }) {
         <a className="btn btn--success" onClick={() => setShowAddModal(true)}>
           Add a photo
         </a>
-        {!user && (
+        {!isUserLoggedIn && (
           <a className="btn btn--login" href="/login">
             Login
           </a>
         )}
-        {user && (
-          <>
-            <a className="avatar-no-pic">AB</a>
-            <a className="avatar">
-              <img
-                src="https://randomuser.me/api/portraits/men/28.jpg"
-                alt=""
-              />
-            </a>
-            <div className="isLoggedInMenu"></div>
-          </>
+        {isUserLoggedIn && (
+          <div className="isLoggedInMenu">
+            <a
+              className="avatar-no-pic"
+              onClick={() => setShowUserMenu((showUserMenu) => !showUserMenu)}
+            >{`${user?.name?.charAt(0).toUpperCase()}${user?.name
+              ?.charAt(1)
+              .toUpperCase()}`}</a>
+            {showUserMenu && (
+              <ul className="list">
+                <li>
+                  <a className="list__link" onClick={logout}>
+                    <img src={logoutIcon} alt="logout icon" />
+                    Logout
+                  </a>
+                </li>
+              </ul>
+            )}
+          </div>
         )}
       </header>
       {showAddModal && (

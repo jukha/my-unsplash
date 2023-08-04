@@ -74,6 +74,7 @@ export default function Signup() {
             <input
               className="form-control"
               type="text"
+              placeholder="Your name"
               id="name"
               {...formik.getFieldProps("name")}
             />
@@ -88,6 +89,7 @@ export default function Signup() {
             <input
               className="form-control"
               type="text"
+              placeholder="you@example.com"
               id="email"
               {...formik.getFieldProps("email")}
             />
@@ -102,6 +104,7 @@ export default function Signup() {
             <input
               className="form-control"
               type="password"
+              placeholder="••••••••"
               id="password"
               {...formik.getFieldProps("password")}
             />
@@ -110,13 +113,9 @@ export default function Signup() {
             ) : null}
           </div>
           <div className="form-btns">
-            <a
-              className="btn btn--success"
-              href="/signup"
-              onClick={formik.handleSubmit}
-            >
+            <button className="btn btn--success" onClick={formik.handleSubmit}>
               REGISTER
-            </a>
+            </button>
             <a className="btn btn--success" href="/login">
               LOGIN
             </a>
