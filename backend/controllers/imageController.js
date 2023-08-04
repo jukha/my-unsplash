@@ -1,4 +1,57 @@
+const User = require("../models/userModel");
 const Image = require("./../models/imageModel");
+
+const deleteImage = async (req, res, next) => {
+  try {
+    const { imageId } = req.body;
+    const { password } = req.body;
+
+    if (!imageId || !password) {
+      return res.status(400).json({
+        status: "fail",
+        message: "Please provide imageId and password.",
+      });
+    }
+
+    const image = await Image.findById(imageId);
+
+    if (!image) {
+      return res.status(404).json({
+        status: "fail",
+        message: "Image not found.",
+      });
+    }
+
+    const user = await User.findById(image.owner).select("+password");
+
+    if (!user || !(await user.correctPassword(password, user.password))) {
+      return res.status(401).json({
+        status: "fail",
+        message: "Incorrect password.",
+      });
+    }
+
+    // Check if the currently logged-in user ID matches the image owner ID
+    if (String(req.user._id) !== String(image.owner)) {
+      return res.status(403).json({
+        status: "fail",
+        message: "You are not allowed to delete this image.",
+      });
+    }
+
+    await Image.findByIdAndDelete(imageId);
+
+    res.status(200).json({
+      status: "success",
+      message: "Image deleted successfully.",
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: "fail",
+      message: error.message,
+    });
+  }
+};
 
 exports.getAllImages = async (req, res, next) => {
   try {
@@ -21,32 +74,15 @@ exports.getAllImages = async (req, res, next) => {
 };
 
 exports.postImage = async (req, res, next) => {
+  // Image ID and user password in Payload means DELETE img
+  if (req.body.imageId && req.body.password) {
+    return deleteImage(req, res, next);
+  }
   try {
     await Image.create(req.body);
     res.status(201).json({
       status: "success",
-      message: "image posted successfully",
-    });
-  } catch (error) {
-    res.status(400).json({
-      statuts: "fail",
-      message: error.message,
-    });
-  }
-};
-
-exports.deleteImage = async (req, res, next) => {
-  try {
-    const imageId = req.params.id;
-    const image = await Image.findOneAndDelete(imageId);
-
-    if (!image) {
-      throw new Error("No image found with that ID.");
-    }
-
-    res.status(204).json({
-      status: "success",
-      message: "Image deleted successfully",
+      message: "Image posted successfully.",
     });
   } catch (error) {
     res.status(400).json({

@@ -19,6 +19,14 @@ const createSendToken = (user, statusCode, res) => {
   });
 };
 
+exports.getAllUsers = async (req, res, next) => {
+  const users = await User.find({});
+  res.status(200).json({
+    result: users.length,
+    data: users,
+  });
+};
+
 exports.signup = async (req, res, next) => {
   try {
     const newUser = await User.create({
@@ -77,16 +85,21 @@ exports.protect = async (req, res, next) => {
   }
 
   // Token Verification
-  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  try {
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+    const currentUser = await User.findById(decoded.id);
+    if (!currentUser) {
+      return res.status(401).json({
+        status: "fail",
+        message: "User no longer exist.",
+      });
+    }
 
-  const currentUser = await User.findById(decoded.id);
-  if (!currentUser) {
-    return res.status(401).json({
-      status: "fail",
-      message: "User no longer exist.",
+    req.user = currentUser;
+    next();
+  } catch (error) {
+    res.status(400).json({
+      error,
     });
   }
-
-  req.user = currentUser;
-  next();
 };
