@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -6,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 export default function Signup() {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const validate = (values) => {
     const errors = {};
     if (!values.name) {
@@ -36,6 +38,7 @@ export default function Signup() {
     },
     validate,
     onSubmit: async (values) => {
+      setLoading(true);
       try {
         const { data } = await axios.post(
           "http://localhost:5000/api/v1/users/signup",
@@ -46,7 +49,7 @@ export default function Signup() {
             },
           }
         );
-        console.log("success", data);
+
         const successMsg = `${data.message} Redirecting you to login page.`;
         toast.success(successMsg, {
           autoClose: 2000,
@@ -55,9 +58,10 @@ export default function Signup() {
           if (payload.status === "removed") navigate("/login");
         });
       } catch (error) {
-        console.log(error);
         const errorMsg = error.response?.data?.message || error.message;
         toast.error(errorMsg);
+      } finally {
+        setLoading(false);
       }
     },
   });
@@ -65,8 +69,8 @@ export default function Signup() {
     <div className="auth-wrapper">
       <ToastContainer />
       <div className="auth-form">
-        <h3>Log into your account</h3>
-        <form>
+        <h3>Create your account</h3>
+        <form onSubmit={formik.handleSubmit}>
           <div className="form-group">
             <label htmlFor="name" className="form-label">
               Name
@@ -113,8 +117,9 @@ export default function Signup() {
             ) : null}
           </div>
           <div className="form-btns">
-            <button className="btn btn--success" onClick={formik.handleSubmit}>
+            <button className="btn btn--success btn-with-loader">
               REGISTER
+              {loading && <span className="loader"></span>}
             </button>
             <a className="btn btn--success" href="/login">
               LOGIN

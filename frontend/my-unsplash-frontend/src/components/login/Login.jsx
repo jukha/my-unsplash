@@ -9,12 +9,6 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const loginBtnStyle = {
-    display: "flex",
-    gap: "0.9rem",
-    alignItems: "center",
-  };
-
   const validate = (values) => {
     const errors = {};
 
@@ -52,13 +46,14 @@ export default function Login() {
             },
           }
         );
-        setLoading(false);
+        localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.data.user));
         navigate("/");
       } catch (error) {
-        setLoading(false);
         const errorMsg = error.response?.data?.message || error.message;
         toast.error(errorMsg);
+      } finally {
+        setLoading(false);
       }
     },
   });
@@ -67,7 +62,7 @@ export default function Login() {
       <ToastContainer />
       <div className="auth-form">
         <h3>Log into your account</h3>
-        <form>
+        <form onSubmit={formik.handleSubmit}>
           <div className="form-group">
             <label htmlFor="email" className="form-label">
               Email address
@@ -99,11 +94,7 @@ export default function Login() {
             ) : null}
           </div>
           <div className="form-btns">
-            <button
-              className="btn btn--success"
-              style={loginBtnStyle}
-              onClick={formik.handleSubmit}
-            >
+            <button className="btn btn--success btn-with-loader">
               LOGIN
               {loading && <span className="loader"></span>}
             </button>

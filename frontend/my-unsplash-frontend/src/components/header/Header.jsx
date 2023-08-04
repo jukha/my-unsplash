@@ -1,28 +1,85 @@
 import "./Header.css";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useFormik } from "formik";
 import userIcon from "./../../assets/user-solid.svg";
 import searchIcon from "./../../assets/search-icon.svg";
 import logoutIcon from "./../../assets/logout.svg";
 import Modal from "../modal/Modal";
-import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-export default function Header({ user }) {
+export default function Header({ user, fetchImages }) {
   const [showAddModal, setShowAddModal] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(
-    user !== undefined ? true : false
-  );
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(() => user !== null);
+
+  const validate = (values) => {
+    const errors = {};
+
+    if (!values.label) {
+      errors.label = "Required";
+    }
+
+    if (!values.url) {
+      errors.url = "Required";
+    } else if (!/^(http|https):\/\/[^ "]+$/.test(values.url)) {
+      errors.url = "URL not valid.";
+    }
+
+    if (!values.description) {
+      errors.description = "Required";
+    }
+
+    return errors;
+  };
+  const formik = useFormik({
+    initialValues: {
+      url: "",
+      label: "",
+      description: "",
+    },
+    validate,
+    onSubmit: async (values) => {
+      setLoading(true);
+      try {
+        const token = localStorage.getItem("token");
+        const { data } = await axios.post(
+          "http://localhost:5000/api/v1/images",
+          values,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setShowAddModal(false);
+        fetchImages();
+        toast.success(data.message);
+      } catch (error) {
+        const errorMsg = error.response?.data?.message || error.message;
+        toast.error(errorMsg);
+      } finally {
+        setLoading(false);
+      }
+    },
+  });
 
   useEffect(() => {
     document.addEventListener("keydown", handleEscKey);
+    setIsUserLoggedIn(user !== null);
 
     return () => {
       document.removeEventListener("keydown", handleEscKey);
     };
-  }, []);
+  }, [user]);
   const handleEscKey = (event) => {
     if (event.key === "Escape") {
       setShowAddModal(false);
+      setShowUserMenu(false);
     }
   };
 
@@ -30,6 +87,7 @@ export default function Header({ user }) {
 
   const logout = () => {
     localStorage.removeItem("user");
+    localStorage.removeItem("token");
     setIsUserLoggedIn(false);
     setShowUserMenu(false);
     navigate("/");
@@ -38,6 +96,7 @@ export default function Header({ user }) {
   return (
     <>
       <header>
+        <ToastContainer />
         <div className="logo">
           <img src={userIcon} />
           <div>
@@ -56,12 +115,11 @@ export default function Header({ user }) {
         <a className="btn btn--success" onClick={() => setShowAddModal(true)}>
           Add a photo
         </a>
-        {!isUserLoggedIn && (
+        {!isUserLoggedIn ? (
           <a className="btn btn--login" href="/login">
             Login
           </a>
-        )}
-        {isUserLoggedIn && (
+        ) : (
           <div className="isLoggedInMenu">
             <a
               className="avatar-no-pic"
@@ -86,30 +144,71 @@ export default function Header({ user }) {
         <Modal>
           <div className="modal-backshadow"></div>
           <section className="add-photo-modal">
-            <h3 className="modal-header">Add a new photo</h3>
-            <form>
-              <div className="form-group">
-                <label htmlFor="label" className="form-label">
-                  Label
-                </label>
-                <input className="form-control" type="text" id="label" />
-              </div>
-              <div className="form-group">
-                <label htmlFor="url" className="form-label">
-                  Photo URL
-                </label>
-                <input className="form-control" type="text" id="url" />
-              </div>
-              <div className="form-btns">
-                <a
-                  className="btn--cancel"
-                  onClick={() => setShowAddModal(false)}
-                >
-                  Cancel
-                </a>
-                <a className="btn btn--success">Submit</a>
-              </div>
-            </form>
+            {isUserLoggedIn ? (
+              <>
+                <h3 className="modal-header">Add a new photo</h3>
+                <form onSubmit={formik.handleSubmit}>
+                  <div className="form-group">
+                    <label htmlFor="label" className="form-label">
+                      Label
+                    </label>
+                    <input
+                      className="form-control"
+                      type="text"
+                      id="label"
+                      {...formik.getFieldProps("label")}
+                    />
+                    {formik.touched.label && formik.errors.label ? (
+                      <div className="error">{formik.errors.label}</div>
+                    ) : null}
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="description" className="form-label">
+                      Description
+                    </label>
+                    <input
+                      className="form-control"
+                      type="text"
+                      id="description"
+                      {...formik.getFieldProps("description")}
+                    />
+                    {formik.touched.description && formik.errors.description ? (
+                      <div className="error">{formik.errors.description}</div>
+                    ) : null}
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="url" className="form-label">
+                      Photo URL
+                    </label>
+                    <input
+                      className="form-control"
+                      type="text"
+                      id="url"
+                      {...formik.getFieldProps("url")}
+                    />
+                    {formik.touched.url && formik.errors.url ? (
+                      <div className="error">{formik.errors.url}</div>
+                    ) : null}
+                  </div>
+                  <div className="form-btns">
+                    <a
+                      className="btn--cancel"
+                      onClick={() => setShowAddModal(false)}
+                    >
+                      Cancel
+                    </a>
+                    <button className="btn btn--success btn-with-loader">
+                      Submit
+                      {loading && <span className="loader"></span>}
+                    </button>
+                  </div>
+                </form>
+              </>
+            ) : (
+              <h3 className="modal-header mb-0">
+                Please <a href="/login">login</a> to add your images.
+              </h3>
+            )}
           </section>
         </Modal>
       )}

@@ -8,7 +8,7 @@ export default function Home() {
   const getCurrentUser = () => {
     if (localStorage.getItem("user")) {
       setUser(JSON.parse(localStorage.getItem("user")));
-    }
+    } else setUser(null);
   };
   const getImages = async () => {
     const res = await fetch("http://localhost:5000/api/v1/images");
@@ -16,15 +16,18 @@ export default function Home() {
     setImages(data);
   };
   useEffect(() => {
-    console.log("Home"  );
-    getImages();
     getCurrentUser();
+    getImages();
   }, []);
+
+  const fetchNewImages = () => {
+    getImages();
+  };
 
   return (
     <div className="container">
-      <Header user={user} />
-      <Gallery images={images} />
+      <Header user={user} fetchImages={fetchNewImages} />
+      <Gallery images={images} user={user} />
     </div>
   );
 }

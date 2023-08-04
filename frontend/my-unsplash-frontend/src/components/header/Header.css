@@ -63,10 +63,10 @@ header [class*="avatar"] {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 3.35rem;
-  height: 3.35rem;
+  width: 3rem;
+  height: 3rem;
   border-radius: 50%;
-  font-size: 1.2rem;
+  font-size: 1rem;
   overflow: hidden;
   transition: all 300ms ease;
 }
@@ -98,4 +98,3 @@ header [class*="avatar"]:hover {
   width: 1.3rem;
   height: 1.3rem;
 }
-
