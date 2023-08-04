@@ -43,12 +43,14 @@ export default function Header({ user, fetchImages }) {
     },
     validate,
     onSubmit: async (values) => {
+      console.log("form-values", values);
       setLoading(true);
+      const formData = { ...values, owner: user._id };
       try {
         const token = localStorage.getItem("token");
         const { data } = await axios.post(
           "http://localhost:5000/api/v1/images",
-          values,
+          formData,
           {
             headers: {
               "Content-Type": "application/json",

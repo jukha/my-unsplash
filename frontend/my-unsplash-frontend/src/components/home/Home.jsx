@@ -27,7 +27,7 @@ export default function Home() {
   return (
     <div className="container">
       <Header user={user} fetchImages={fetchNewImages} />
-      <Gallery images={images} user={user} />
+      <Gallery images={images} user={user} fetchImages={fetchNewImages} />
     </div>
   );
 }
