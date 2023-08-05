@@ -41,7 +41,7 @@ export default function Signup() {
       setLoading(true);
       try {
         const { data } = await axios.post(
-          "http://localhost:5000/api/v1/users/signup",
+          "https://my-unsplash-backend-tau.vercel.app/api/v1/users/signup",
           values,
           {
             headers: {

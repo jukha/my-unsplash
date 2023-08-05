@@ -53,7 +53,7 @@ export default function Header({ user, fetchImages }) {
       try {
         const token = localStorage.getItem("token");
         const { data } = await axios.post(
-          "http://localhost:5000/api/v1/images",
+          "https://my-unsplash-backend-tau.vercel.app/api/v1/images",
           formData,
           {
             headers: {
@@ -139,7 +139,7 @@ export default function Header({ user, fetchImages }) {
 
     try {
       const { data } = await axios.get(
-        `http://localhost:5000/api/v1/images/label-suggestions?term=${value}`
+        `https://my-unsplash-backend-tau.vercel.app/api/v1/images/label-suggestions?term=${value}`
       );
       setSuggestions(data.suggestions);
     } catch (error) {

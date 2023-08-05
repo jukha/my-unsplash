@@ -45,7 +45,7 @@ export default function Gallery({ images, user, fetchImages }) {
       try {
         const token = localStorage.getItem("token");
         const { data } = await axios.post(
-          "http://localhost:5000/api/v1/images",
+          "https://my-unsplash-backend-tau.vercel.app/api/v1/images",
           formData,
           {
             headers: {
@@ -70,7 +70,7 @@ export default function Gallery({ images, user, fetchImages }) {
     <>
       <main className="gallery-wrapper">
         <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}>
-          <Masonry  gutter="2.85rem">
+          <Masonry gutter="2.85rem">
             {images.map((el, idx) => {
               0;
               return (

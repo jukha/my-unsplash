@@ -16,8 +16,9 @@ export default function Home() {
   };
   const getImages = async (label) => {
     loadingBarRef.current.continuousStart();
-    let url = "http://localhost:5000/api/v1/images";
-    if (label) url = `http://localhost:5000/api/v1/images?label=${label}`;
+    let url = "https://my-unsplash-backend-tau.vercel.app/api/v1/images";
+    if (label)
+      url = `https://my-unsplash-backend-tau.vercel.app/api/v1/images?label=${label}`;
     try {
       const { data } = await axios.get(url);
       setImages(data.data);
