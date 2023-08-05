@@ -173,3 +173,7 @@ a {
 .position-relative {
   position: relative;
 }
+.col {
+  display: flex;
+  flex-direction: column;
+}

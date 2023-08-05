@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import axios from "axios";
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import "./Gallery.css";
 import Modal from "../modal/Modal";
 import { toast } from "react-toastify";
@@ -68,24 +69,28 @@ export default function Gallery({ images, user, fetchImages }) {
   return (
     <>
       <main className="gallery-wrapper">
-        {images.map((el, idx) => {
-          0;
-          return (
-            <div className="frame" key={idx}>
-              <img src={el.url} alt={el.description} />
-              <p className="img-description">{el.description}</p>
-              <a
-                className="btn btn--danger-outline"
-                onClick={() => {
-                  setShowDeletePicModal(true);
-                  setCurrImgId(el._id);
-                }}
-              >
-                delete
-              </a>
-            </div>
-          );
-        })}
+        <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}>
+          <Masonry  gutter="2.85rem">
+            {images.map((el, idx) => {
+              0;
+              return (
+                <div className="frame" key={idx}>
+                  <img src={el.url} alt={el.description} />
+                  <p className="img-description">{el.description}</p>
+                  <a
+                    className="btn btn--danger-outline"
+                    onClick={() => {
+                      setShowDeletePicModal(true);
+                      setCurrImgId(el._id);
+                    }}
+                  >
+                    delete
+                  </a>
+                </div>
+              );
+            })}
+          </Masonry>
+        </ResponsiveMasonry>
         {showDeletePicModal && (
           <Modal>
             <div className="modal-backshadow"></div>

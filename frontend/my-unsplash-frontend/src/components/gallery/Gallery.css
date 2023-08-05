@@ -1,8 +1,8 @@
 .gallery-wrapper {
   margin-top: 4.73rem;
-  display: grid;
+  /* display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 2.85rem;
+  gap: 2.85rem; */
 }
 .frame {
   position: relative;

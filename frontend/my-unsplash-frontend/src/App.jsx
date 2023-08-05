@@ -17,7 +17,7 @@ function App() {
         rtl={false}
         pauseOnFocusLoss
         draggable
-        pauseOnHover
+        pauseOnHover={false}
       />
       <Routes>
         <Route path="/" element={<Home />} />
