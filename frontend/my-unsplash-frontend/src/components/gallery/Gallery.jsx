@@ -5,6 +5,7 @@ import "./Gallery.css";
 import Modal from "../modal/Modal";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import closeIcon from "./../../assets/close.svg";
 
 export default function Gallery({ images, user, fetchImages }) {
   const [loading, setLoading] = useState(false);
@@ -91,6 +92,9 @@ export default function Gallery({ images, user, fetchImages }) {
           <Modal>
             <div className="modal-backshadow"></div>
             <section className="delete-photo-modal">
+              <a onClick={() => setShowDeletePicModal(false)}>
+                <img className="close-icon" src={closeIcon} alt="close icon" />
+              </a>
               {!isUserLoggedIn ? (
                 <h3 className="modal-header mb-0">
                   Please <a href="/login">login</a> to delete your images.
@@ -108,6 +112,9 @@ export default function Gallery({ images, user, fetchImages }) {
                         placeholder="******************"
                         {...formik.getFieldProps("password")}
                       />
+                      {formik.touched.password && formik.errors.password ? (
+                      <div className="error">{formik.errors.password}</div>
+                    ) : null}
                     </div>
                     <div className="form-btns">
                       <a

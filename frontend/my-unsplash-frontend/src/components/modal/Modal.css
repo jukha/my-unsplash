@@ -42,3 +42,9 @@
   gap: 1.55rem;
   margin-top: 1.5rem;
 }
+.close-icon {
+  width: 1.3rem;
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+}

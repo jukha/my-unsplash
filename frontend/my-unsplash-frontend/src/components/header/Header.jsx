@@ -5,6 +5,7 @@ import { useFormik } from "formik";
 import userIcon from "./../../assets/user-solid.svg";
 import searchIcon from "./../../assets/search-icon.svg";
 import logoutIcon from "./../../assets/logout.svg";
+import closeIcon from "./../../assets/close.svg";
 import Modal from "../modal/Modal";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
@@ -15,6 +16,8 @@ export default function Header({ user, fetchImages }) {
   const [loading, setLoading] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(() => user !== null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
 
   const validate = (values) => {
     const errors = {};
@@ -43,7 +46,6 @@ export default function Header({ user, fetchImages }) {
     },
     validate,
     onSubmit: async (values) => {
-      console.log("form-values", values);
       setLoading(true);
       const formData = { ...values, owner: user._id };
       try {
@@ -95,6 +97,26 @@ export default function Header({ user, fetchImages }) {
     navigate("/");
   };
 
+  const handleInputChange = async (event) => {
+    const { value } = event.target;
+    setSearchTerm(value);
+
+    try {
+      const { data } = await axios.get(
+        `http://localhost:5000/api/v1/images/label-suggestions?term=${value}`
+      );
+      setSuggestions(data.suggestions);
+    } catch (error) {
+      console.error("Error fetching label suggestions:", error);
+    }
+  };
+
+  const handleSelectLabel = (label) => {
+    setSearchTerm("");
+    setSuggestions([]);
+    fetchImages(label);
+  };
+
   return (
     <>
       <header>
@@ -106,13 +128,38 @@ export default function Header({ user, fetchImages }) {
             <p>devchallenges.io</p>
           </div>
         </div>
-        <div className="form-group">
+        <div
+          className="form-group search-label"
+          style={
+            suggestions.length > 0
+              ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
+              : {}
+          }
+        >
           <img src={searchIcon} alt="search icon" />
           <input
             type="text"
             placeholder="Search by label"
             className="form-control"
+            value={searchTerm}
+            onChange={handleInputChange}
           />
+          {searchTerm && suggestions.length > 0 && (
+            <ul className="label-suggestions">
+              {suggestions.map((label, idx) => {
+                return (
+                  <li
+                    className="label-suggestions__item"
+                    key={idx}
+                    onClick={() => handleSelectLabel(label)}
+                  >
+                    {/* <a>{makeNextLetterBold(label, searchTerm)}</a> */}
+                    <a className="label-suggestions__link">{label}</a>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </div>
         <a className="btn btn--success" onClick={() => setShowAddModal(true)}>
           Add a photo
@@ -132,6 +179,9 @@ export default function Header({ user, fetchImages }) {
             {showUserMenu && (
               <ul className="list">
                 <li>
+                  <a className="list__link user-name">{user.name}</a>
+                </li>
+                <li>
                   <a className="list__link" onClick={logout}>
                     <img src={logoutIcon} alt="logout icon" />
                     Logout
@@ -146,6 +196,9 @@ export default function Header({ user, fetchImages }) {
         <Modal>
           <div className="modal-backshadow"></div>
           <section className="add-photo-modal">
+            <a onClick={() => setShowAddModal(false)}>
+              <img className="close-icon" src={closeIcon} alt="close icon" />
+            </a>
             {isUserLoggedIn ? (
               <>
                 <h3 className="modal-header">Add a new photo</h3>

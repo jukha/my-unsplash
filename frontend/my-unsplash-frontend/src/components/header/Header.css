@@ -98,3 +98,36 @@ header [class*="avatar"]:hover {
   width: 1.3rem;
   height: 1.3rem;
 }
+.list__link.user-name {
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+  text-transform: capitalize;
+}
+.search-label {
+  position: relative;
+}
+.search-label .label-suggestions {
+  position: absolute;
+  top: 87%;
+  border-radius: 0;
+  box-shadow: inherit;
+  border: inherit;
+  border-top: 0;
+  background-color: inherit;
+  z-index: 100;
+  width: 100%;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+}
+.label-suggestions__item {
+}
+.label-suggestions__link {
+  display: inline-block;
+  padding: 1em;
+  width: 100%;
+  
+}
+.label-suggestions__link:hover {
+  background-color: var(--text-secondary);
+}

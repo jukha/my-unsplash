@@ -10,8 +10,11 @@ export default function Home() {
       setUser(JSON.parse(localStorage.getItem("user")));
     } else setUser(null);
   };
-  const getImages = async () => {
-    const res = await fetch("http://localhost:5000/api/v1/images");
+  const getImages = async (label) => {
+    let url = "http://localhost:5000/api/v1/images";
+    if (label) url = `http://localhost:5000/api/v1/images?label=${label}`;
+
+    const res = await fetch(url);
     const { data } = await res.json();
     setImages(data);
   };
@@ -20,8 +23,8 @@ export default function Home() {
     getImages();
   }, []);
 
-  const fetchNewImages = () => {
-    getImages();
+  const fetchNewImages = (label) => {
+    getImages(label);
   };
 
   return (

@@ -35,7 +35,8 @@ const deleteImage = async (req, res, next) => {
     if (String(req.user._id) !== String(image.owner)) {
       return res.status(403).json({
         status: "fail",
-        message: "You are not allowed to delete this image.",
+        message:
+          "You are not allowed to delete the image posted by someone else.",
       });
     }
 
@@ -55,7 +56,7 @@ const deleteImage = async (req, res, next) => {
 
 exports.getAllImages = async (req, res, next) => {
   try {
-    const { label } = req.params;
+    const { label } = req.query;
     let query = {};
     if (label) query = { $text: { $search: label } };
     const images = await Image.find(query)
@@ -83,6 +84,23 @@ exports.postImage = async (req, res, next) => {
     res.status(201).json({
       status: "success",
       message: "Image posted successfully.",
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: "fail",
+      message: error.message,
+    });
+  }
+};
+
+exports.labelSuggestions = async (req, res, next) => {
+  try {
+    const { term } = req.query;
+    const regex = new RegExp(term, "i");
+    const labels = await Image.distinct("label", { label: regex });
+    res.status(200).json({
+      status: "success",
+      suggestions: labels,
     });
   } catch (error) {
     res.status(400).json({

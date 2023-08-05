@@ -8,6 +8,8 @@ router
   .get(imageController.getAllImages)
   .post(userController.protect, imageController.postImage);
 
+router.get("/label-suggestions", imageController.labelSuggestions)
+
 // router.delete("/:imageId/:userI", userController.protect, imageController.deleteImage);
 
 module.exports = router;
