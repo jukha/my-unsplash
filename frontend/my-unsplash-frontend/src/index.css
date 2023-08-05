@@ -177,3 +177,12 @@ a {
   display: flex;
   flex-direction: column;
 }
+
+/* ================ */
+/* Media Queries   */
+/* ============== */
+@media only screen and (max-width: 37.5em) {
+  .auth-form {
+    padding-inline: 2rem;
+  }
+}

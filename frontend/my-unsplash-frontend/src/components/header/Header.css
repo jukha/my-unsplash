@@ -1,5 +1,6 @@
 header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 1.5rem;
   padding-top: 2em;
