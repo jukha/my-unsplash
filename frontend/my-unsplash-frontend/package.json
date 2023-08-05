@@ -1,6 +1,5 @@
 {
   "name": "my-unsplash-frontend",
-  "homepage": "https://my-unsplash-vert.vercel.app/",
   "private": true,
   "version": "0.0.0",
   "type": "module",
