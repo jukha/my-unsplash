@@ -48,7 +48,8 @@ header .btn--success {
   margin-left: auto;
 }
 
-header .btn--login {
+header .btn--login,
+header .btn--dark {
   background: var(--text-tertiary);
 }
 
@@ -106,6 +107,10 @@ header [class*="avatar"]:hover {
 .search-label {
   position: relative;
 }
+.search-label .btn--dark {
+  position: absolute;
+  right: -8rem;
+}
 .search-label .label-suggestions {
   position: absolute;
   top: 87%;
@@ -120,14 +125,13 @@ header [class*="avatar"]:hover {
   display: flex;
   flex-direction: column;
 }
-.label-suggestions__item {
-}
+
 .label-suggestions__link {
   display: inline-block;
   padding: 1em;
   width: 100%;
-  
 }
-.label-suggestions__link:hover {
+.label-suggestions__link:hover,
+.selected {
   background-color: var(--text-secondary);
 }

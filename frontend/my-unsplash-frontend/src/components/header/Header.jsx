@@ -1,6 +1,6 @@
 import "./Header.css";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useFormik } from "formik";
 import userIcon from "./../../assets/user-solid.svg";
 import searchIcon from "./../../assets/search-icon.svg";
@@ -11,12 +11,15 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 export default function Header({ user, fetchImages }) {
+  const navigate = useNavigate(null);
+  const labelSuggestionsRef = useRef(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(() => user !== null);
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState([]);
+  const [showAllBtn, setShowAllBtn] = useState(false);
 
   const validate = (values) => {
     const errors = {};
@@ -73,12 +76,32 @@ export default function Header({ user, fetchImages }) {
 
   useEffect(() => {
     document.addEventListener("keydown", handleEscKey);
+    document.addEventListener("keydown", handleArrowNavigation);
+    document.addEventListener("keydown", handleEnterKey);
     setIsUserLoggedIn(user !== null);
 
     return () => {
       document.removeEventListener("keydown", handleEscKey);
+      document.removeEventListener("keydown", handleArrowNavigation);
+      document.removeEventListener("keydown", handleEnterKey);
     };
   }, [user]);
+
+  const handleArrowNavigation = (event) => {
+    const labelSuggestions = labelSuggestionsRef.current;
+    const selected = labelSuggestions?.querySelector(".selected");
+
+    if (event.key === "ArrowDown" && selected.nextSibling) {
+      event.preventDefault();
+      selected.nextSibling.classList.add("selected");
+      selected.classList.remove("selected");
+    } else if (event.key === "ArrowUp" && selected.previousSibling) {
+      event.preventDefault();
+      selected.previousSibling.classList.add("selected");
+      selected.classList.remove("selected");
+    }
+  };
+
   const handleEscKey = (event) => {
     if (event.key === "Escape") {
       setShowAddModal(false);
@@ -86,7 +109,21 @@ export default function Header({ user, fetchImages }) {
     }
   };
 
-  const navigate = useNavigate(null);
+  const handleShowAllClick = () => {
+    fetchImages();
+    setShowAllBtn(false);
+  };
+
+  const handleEnterKey = (event) => {
+    const labelSuggestions = labelSuggestionsRef.current;
+    const selected = labelSuggestions?.querySelector(".selected");
+
+    if (event.key === "Enter" && selected) {
+      event.preventDefault();
+      const label = selected.textContent.trim();
+      handleSelectLabel(label);
+    }
+  };
 
   const logout = () => {
     localStorage.removeItem("user");
@@ -111,6 +148,9 @@ export default function Header({ user, fetchImages }) {
   };
 
   const handleSelectLabel = (label) => {
+    if (suggestions) {
+      setShowAllBtn(true);
+    }
     setSearchTerm("");
     setSuggestions([]);
     fetchImages(label);
@@ -143,20 +183,26 @@ export default function Header({ user, fetchImages }) {
             onChange={handleInputChange}
           />
           {searchTerm && suggestions.length > 0 && (
-            <ul className="label-suggestions">
+            <ul className="label-suggestions" ref={labelSuggestionsRef}>
               {suggestions.map((label, idx) => {
+                // const isSelected = idx === 0;
+                const className = idx === 0 ? "selected" : "";
                 return (
                   <li
-                    className="label-suggestions__item"
+                    className={`label-suggestions__item ${className}`}
                     key={idx}
                     onClick={() => handleSelectLabel(label)}
                   >
-                    {/* <a>{makeNextLetterBold(label, searchTerm)}</a> */}
                     <a className="label-suggestions__link">{label}</a>
                   </li>
                 );
               })}
             </ul>
+          )}
+          {showAllBtn && (
+            <a className="btn btn--dark" onClick={handleShowAllClick}>
+              Show All
+            </a>
           )}
         </div>
         <a className="btn btn--success" onClick={() => setShowAddModal(true)}>
