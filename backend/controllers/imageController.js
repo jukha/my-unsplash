@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const Image = require("./../models/imageModel");
+const axios = require("axios");
 
 const deleteImage = async (req, res, next) => {
   try {
@@ -54,6 +55,18 @@ const deleteImage = async (req, res, next) => {
   }
 };
 
+// Function to verify if the URL contains a valid image
+const verifyImageURL = async (url) => {
+  try {
+    const response = await axios.head(url);
+    const contentType = response.headers["content-type"];
+    return contentType.startsWith("image/");
+  } catch (error) {
+    // If there's an error making the request or the URL is invalid, return false
+    return false;
+  }
+};
+
 exports.getAllImages = async (req, res, next) => {
   try {
     const { label } = req.query;
@@ -79,7 +92,16 @@ exports.postImage = async (req, res, next) => {
   if (req.body.imageId && req.body.password) {
     return deleteImage(req, res, next);
   }
+  const imageUrl = req.body.url;
+
   try {
+    const isValidImage = await verifyImageURL(imageUrl);
+    if (!isValidImage) {
+      return res.status(400).json({
+        status: "fail",
+        message: "Invalid image URL.",
+      });
+    }
     await Image.create(req.body);
     res.status(201).json({
       status: "success",
