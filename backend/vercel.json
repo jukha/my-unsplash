@@ -2,7 +2,7 @@
   "routes": [
     {
       "src": "/api/v1/(.*)",
-      "dest": "http://your-node-api-domain/api/v1/$1"
+      "dest": "https://my-unsplash-backend-seven.vercel.app/api/v1/$1"
     }
   ]
 }
