@@ -31,8 +31,8 @@ const imageSchema = new mongoose.Schema({
   },
 });
 
-// Create a text index on the "label" field
-imageSchema.index({ label: "text" });
+// // Create a text index on the "label" field
+// imageSchema.index({ label: "text" });
 
 imageSchema.pre("save", function (next) {
   // Convert the "name" field to uppercase before saving

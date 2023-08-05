@@ -74,8 +74,10 @@ a {
   cursor: pointer;
   color: var(--text-secondary);
 }
+
 .form-group {
   margin-bottom: 1.16rem;
+  position: relative;
 }
 .form-label {
   display: inline-block;
@@ -94,8 +96,17 @@ a {
   box-shadow: 0px 1px 6px 0px rgba(0, 0, 0, 0.1);
   padding: 1.12em 1.01em;
   /* font-family: inherit; */
-  font:inherit;
+  font: inherit;
   width: 100%;
+}
+.toggle-password {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 1.16rem 1.01rem;
+  background: var(--btn-sucess);
+  border-radius: 0.75rem;
+  color: var(--clr-neutral);
 }
 
 .form-control:focus {
@@ -154,4 +165,11 @@ a {
   display: flex;
   gap: 0.9rem;
   align-items: center;
+}
+
+/* ================ */
+/* Utility Classes */
+/* ============== */
+.position-relative {
+  position: relative;
 }

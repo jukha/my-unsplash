@@ -3,8 +3,7 @@ import { useFormik } from "formik";
 import axios from "axios";
 import "./Gallery.css";
 import Modal from "../modal/Modal";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import closeIcon from "./../../assets/close.svg";
 
 export default function Gallery({ images, user, fetchImages }) {
@@ -12,6 +11,7 @@ export default function Gallery({ images, user, fetchImages }) {
   const [showDeletePicModal, setShowDeletePicModal] = useState(false);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(() => user !== null);
   const [currImgId, setCurrImgId] = useState("");
+  const [inputTypePassword, setInputTypePassword] = useState(true);
   useEffect(() => {
     document.addEventListener("keydown", handleEscKey);
     setIsUserLoggedIn(user !== null);
@@ -53,14 +53,13 @@ export default function Gallery({ images, user, fetchImages }) {
             },
           }
         );
-        console.log(data);
-        setShowDeletePicModal(false);
         fetchImages();
         toast.success(data.message);
       } catch (error) {
         const errorMsg = error.response?.data?.message || error.message;
         toast.error(errorMsg);
       } finally {
+        setShowDeletePicModal(false);
         setLoading(false);
       }
     },
@@ -68,7 +67,6 @@ export default function Gallery({ images, user, fetchImages }) {
 
   return (
     <>
-      <ToastContainer />
       <main className="gallery-wrapper">
         {images.map((el, idx) => {
           0;
@@ -105,16 +103,26 @@ export default function Gallery({ images, user, fetchImages }) {
                   <form onSubmit={formik.handleSubmit}>
                     <div className="form-group">
                       <label htmlFor="password"></label>
-                      <input
-                        className="form-control"
-                        id="password"
-                        type="password"
-                        placeholder="******************"
-                        {...formik.getFieldProps("password")}
-                      />
+                      <div className="position-relative">
+                        <input
+                          className="form-control"
+                          id="password"
+                          type={inputTypePassword ? "password" : "text"}
+                          placeholder="******************"
+                          {...formik.getFieldProps("password")}
+                        />
+                        <a
+                          className="toggle-password"
+                          onClick={() => {
+                            setInputTypePassword(() => !inputTypePassword);
+                          }}
+                        >
+                          {inputTypePassword ? "Show" : "Hide"}
+                        </a>
+                      </div>
                       {formik.touched.password && formik.errors.password ? (
-                      <div className="error">{formik.errors.password}</div>
-                    ) : null}
+                        <div className="error">{formik.errors.password}</div>
+                      ) : null}
                     </div>
                     <div className="form-btns">
                       <a

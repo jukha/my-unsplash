@@ -8,8 +8,7 @@ import logoutIcon from "./../../assets/logout.svg";
 import closeIcon from "./../../assets/close.svg";
 import Modal from "../modal/Modal";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 export default function Header({ user, fetchImages }) {
   const [showAddModal, setShowAddModal] = useState(false);
@@ -120,7 +119,6 @@ export default function Header({ user, fetchImages }) {
   return (
     <>
       <header>
-        <ToastContainer />
         <div className="logo">
           <img src={userIcon} />
           <div>

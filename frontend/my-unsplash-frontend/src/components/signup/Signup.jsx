@@ -2,12 +2,12 @@ import { useState } from "react";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 export default function Signup() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [inputTypePassword, setInputTypePassword] = useState(true);
   const validate = (values) => {
     const errors = {};
     if (!values.name) {
@@ -51,12 +51,10 @@ export default function Signup() {
         );
 
         const successMsg = `${data.message} Redirecting you to login page.`;
-        toast.success(successMsg, {
-          autoClose: 2000,
-        });
-        toast.onChange((payload) => {
-          if (payload.status === "removed") navigate("/login");
-        });
+        toast.success(successMsg);
+        setTimeout(() => {
+          navigate("/login");
+        }, 2500);
       } catch (error) {
         const errorMsg = error.response?.data?.message || error.message;
         toast.error(errorMsg);
@@ -67,7 +65,6 @@ export default function Signup() {
   });
   return (
     <div className="auth-wrapper">
-      <ToastContainer />
       <div className="auth-form">
         <h3>Create your account</h3>
         <form onSubmit={formik.handleSubmit}>
@@ -105,13 +102,23 @@ export default function Signup() {
             <label htmlFor="password" className="form-label">
               Password
             </label>
-            <input
-              className="form-control"
-              type="password"
-              placeholder="••••••••"
-              id="password"
-              {...formik.getFieldProps("password")}
-            />
+            <div className="position-relative">
+              <input
+                className="form-control"
+                type={inputTypePassword ? "password" : "text"}
+                placeholder="••••••••"
+                id="password"
+                {...formik.getFieldProps("password")}
+              />
+              <a
+                className="toggle-password"
+                onClick={() => {
+                  setInputTypePassword(() => !inputTypePassword);
+                }}
+              >
+                {inputTypePassword ? "Show" : "Hide"}
+              </a>
+            </div>
             {formik.touched.password && formik.errors.password ? (
               <div className="error">{formik.errors.password}</div>
             ) : null}
