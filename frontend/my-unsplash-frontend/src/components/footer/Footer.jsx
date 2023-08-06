@@ -8,6 +8,7 @@ export default function Footer() {
     padding: "2em",
     background: "#3db46d",
     textAlign: "center",
+    marginTop: "10rem",
   };
   const iconSize = {
     width: "2rem",
