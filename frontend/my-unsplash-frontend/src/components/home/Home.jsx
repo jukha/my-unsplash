@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import Header from "./../header/Header";
 import Gallery from "./../gallery/Gallery";
 import LoadingBar from "react-top-loading-bar";
+import Footer from "../footer/Footer";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -39,10 +40,13 @@ export default function Home() {
   };
 
   return (
-    <div className="container">
-      <LoadingBar color="#f11946" ref={loadingBarRef} />
-      <Header user={user} fetchImages={fetchNewImages} />
-      <Gallery images={images} user={user} fetchImages={fetchNewImages} />
-    </div>
+    <>
+      <div className="container">
+        <LoadingBar color="#f11946" ref={loadingBarRef} />
+        <Header user={user} fetchImages={fetchNewImages} />
+        <Gallery images={images} user={user} fetchImages={fetchNewImages} />
+      </div>
+      <Footer />
+    </>
   );
 }
