@@ -119,5 +119,4 @@ $ npm install && npm run dev
 
 ## Contact
 
-- GitHub [@your-username](https://{github.com/jukha})
-- Linkedin [@your-twitter](https://shorturl.at/nuxzM)
+- GitHub [@jukha](https://github.com/jukha)
