@@ -43,7 +43,7 @@ export default function Home() {
     <>
       <div className="container">
         <LoadingBar color="#f11946" ref={loadingBarRef} />
-        <Header user={user} fetchImages={fetchNewImages} />
+        <Header user={user} setUser={setUser} fetchImages={fetchNewImages} />
         <Gallery images={images} user={user} fetchImages={fetchNewImages} />
       </div>
       <Footer />

@@ -10,13 +10,12 @@ import Modal from "../modal/Modal";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-export default function Header({ user, fetchImages }) {
+export default function Header({ user, setUser, fetchImages }) {
   const navigate = useNavigate(null);
   const labelSuggestionsRef = useRef(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(() => user !== null);
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showAllBtn, setShowAllBtn] = useState(false);
@@ -78,14 +77,13 @@ export default function Header({ user, fetchImages }) {
     document.addEventListener("keydown", handleEscKey);
     document.addEventListener("keydown", handleArrowNavigation);
     document.addEventListener("keydown", handleEnterKey);
-    setIsUserLoggedIn(user !== null);
 
     return () => {
       document.removeEventListener("keydown", handleEscKey);
       document.removeEventListener("keydown", handleArrowNavigation);
       document.removeEventListener("keydown", handleEnterKey);
     };
-  }, [user]);
+  }, []);
 
   const handleArrowNavigation = (event) => {
     const labelSuggestions = labelSuggestionsRef.current;
@@ -128,7 +126,7 @@ export default function Header({ user, fetchImages }) {
   const logout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
-    setIsUserLoggedIn(false);
+    setUser(null);
     setShowUserMenu(false);
     navigate("/");
   };
@@ -208,7 +206,7 @@ export default function Header({ user, fetchImages }) {
         <a className="btn btn--success" onClick={() => setShowAddModal(true)}>
           Add a photo
         </a>
-        {!isUserLoggedIn ? (
+        {!user ? (
           <a className="btn btn--login" href="/login">
             Login
           </a>
@@ -243,7 +241,7 @@ export default function Header({ user, fetchImages }) {
             <a onClick={() => setShowAddModal(false)}>
               <img className="close-icon" src={closeIcon} alt="close icon" />
             </a>
-            {isUserLoggedIn ? (
+            {user ? (
               <>
                 <h3 className="modal-header">Add a new photo</h3>
                 <form onSubmit={formik.handleSubmit}>
