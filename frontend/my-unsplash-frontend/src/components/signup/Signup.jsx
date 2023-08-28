@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useFormik } from "formik";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -128,9 +128,9 @@ export default function Signup() {
               REGISTER
               {loading && <span className="loader"></span>}
             </button>
-            <a className="btn btn--success" href="/login">
+            <NavLink className="btn btn--success" to="/login">
               LOGIN
-            </a>
+            </NavLink>
           </div>
         </form>
       </div>

@@ -1,5 +1,5 @@
 import "./Header.css";
-import { useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useFormik } from "formik";
 import userIcon from "./../../assets/user-solid.svg";
@@ -183,7 +183,6 @@ export default function Header({ user, setUser, fetchImages }) {
           {searchTerm && suggestions.length > 0 && (
             <ul className="label-suggestions" ref={labelSuggestionsRef}>
               {suggestions.map((label, idx) => {
-                // const isSelected = idx === 0;
                 const className = idx === 0 ? "selected" : "";
                 return (
                   <li
@@ -207,9 +206,9 @@ export default function Header({ user, setUser, fetchImages }) {
           Add a photo
         </a>
         {!user ? (
-          <a className="btn btn--login" href="/login">
+          <NavLink className="btn btn--login" to="/login">
             Login
-          </a>
+          </NavLink>
         ) : (
           <div className="isLoggedInMenu">
             <a
@@ -303,7 +302,7 @@ export default function Header({ user, setUser, fetchImages }) {
               </>
             ) : (
               <h3 className="modal-header mb-0">
-                Please <a href="/login">login</a> to add your images.
+                Please <Link to="/login">login</Link> to add your images.
               </h3>
             )}
           </section>

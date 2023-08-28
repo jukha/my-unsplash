@@ -3,12 +3,16 @@ import { useFormik } from "formik";
 import axios from "axios";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import "./Gallery.css";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import Modal from "../modal/Modal";
 import { toast } from "react-toastify";
 import closeIcon from "./../../assets/close.svg";
+import { Link } from "react-router-dom";
 
 export default function Gallery({ images, user, fetchImages }) {
   const [loading, setLoading] = useState(false);
+  const [imgLoading, setImgLoading] = useState(true);
   const [showDeletePicModal, setShowDeletePicModal] = useState(false);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(() => user !== null);
   const [currImgId, setCurrImgId] = useState("");
@@ -20,11 +24,18 @@ export default function Gallery({ images, user, fetchImages }) {
       document.removeEventListener("keydown", handleEscKey);
     };
   }, [user]);
+
   const handleEscKey = (event) => {
     if (event.key === "Escape") {
       setShowDeletePicModal(false);
     }
   };
+
+  const handleImageLoad = () => {
+    console.log("fully loaded");
+    setImgLoading(false);
+  };
+
   const validate = (values) => {
     const errors = {};
 
@@ -72,10 +83,15 @@ export default function Gallery({ images, user, fetchImages }) {
         <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}>
           <Masonry gutter="2.85rem">
             {images.map((el, idx) => {
-              0;
               return (
                 <div className="frame" key={idx}>
-                  <img src={el.url} alt={el.description} />
+                  {imgLoading && <Skeleton height={500} />}
+                  <img
+                    style={{ display: loading ? "none" : "block" }}
+                    src={el.url}
+                    onLoad={handleImageLoad}
+                    alt={el.description}
+                  />
                   <p className="img-description">{el.description}</p>
                   <a
                     className="btn btn--danger-outline"
@@ -100,7 +116,7 @@ export default function Gallery({ images, user, fetchImages }) {
               </a>
               {!isUserLoggedIn ? (
                 <h3 className="modal-header mb-0">
-                  Please <a href="/login">login</a> to delete your images.
+                  Please <Link to="/login">login</Link> to delete your images.
                 </h3>
               ) : (
                 <>
